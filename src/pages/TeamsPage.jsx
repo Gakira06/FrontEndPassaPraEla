@@ -5,6 +5,7 @@ import { useTeam } from "../context/useTeam";
 function TeamsPage() {
   const navigate = useNavigate();
   const { team } = useTeam();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const positions = [
     { key: "GOL", label: "GOL", top: "85%", left: "50%" },
@@ -49,7 +50,7 @@ function TeamsPage() {
                   {jogadora ? (
                     <>
                       <img
-                        src={"http://localhost:3001" + jogadora.url_imagem}
+                        src={apiUrl + jogadora.url_imagem}
                         alt={jogadora.nome}
                         className="rounded-full h-16 w-16 object-cover border-2 "
                       />
