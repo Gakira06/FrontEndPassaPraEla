@@ -52,7 +52,7 @@ function NoticiasFutebolFeminino() {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto text-center text-lg mt-8 text-red-600 p-4 bg-red-100 rounded-md">
-        <strong>Erro:</strong> {error}
+        <strong>Erro:</strong><p>Para ver as notícias assine o plano premium</p>
       </div>
     );
   }
