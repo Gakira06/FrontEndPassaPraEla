@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import HeaderUniversal from "../components/layout/HeaderUniversal"
 
 // Definição dos campos de estatísticas para renderização dinâmica
 const statFields = [
@@ -24,7 +25,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const jogadorasResponse = await fetch(
-          "https://backendpassapraela-producao.onrender.com/jogadoras"
+          "http://localhost:3001/jogadoras"
         );
         if (!jogadorasResponse.ok)
           throw new Error("Falha ao buscar jogadoras.");
@@ -32,7 +33,7 @@ export default function AdminDashboard() {
         setJogadoras(jogadorasData);
 
         const mercadoResponse = await fetch(
-          "https://backendpassapraela-producao.onrender.com/mercado/status"
+          "http://localhost:3001/mercado/status"
         );
         if (!mercadoResponse.ok)
           throw new Error("Falha ao buscar status do mercado.");
@@ -84,7 +85,7 @@ export default function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `https://backendpassapraela-producao.onrender.com/jogadoras/${jogadoraId}/stats`,
+        `http://localhost:3001/jogadoras/${jogadoraId}/stats`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -157,7 +158,7 @@ export default function AdminDashboard() {
 
       try {
         // Envia a requisição para o backend com o novo status desejado
-        const response = await fetch("https://backendpassapraela-producao.onrender.com/mercado/status", {
+        const response = await fetch("http://localhost:3001/mercado/status", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: novoStatus }),
@@ -195,85 +196,95 @@ export default function AdminDashboard() {
     return <div className="p-8 text-center text-red-500">Erro: {error}</div>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold mb-8">Painel de Administração</h1>
+    <>
+    <HeaderUniversal />
+      <div className="p-8 bg-gray-100 min-h-screen">
+        <h1 className="text-4xl font-bold mb-8">Painel de Administração</h1>
 
-      <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Controle de Rodada</h2>
-        <p className="mb-4">
-          O mercado está atualmente:{" "}
-          <span className="font-bold">{mercadoStatus.toUpperCase()}</span>
-        </p>
-        <button
-          onClick={handleToggleMercado}
-          className={`py-2 px-6 rounded-lg text-white font-bold ${
-            mercadoStatus === "aberto"
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          {mercadoStatus === "aberto"
-            ? "1. FECHAR MERCADO"
-            : "2. APURAR PONTOS E ABRIR MERCADO"}
-        </button>
-      </div>
+        <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Controle de Rodada</h2>
+          <p className="mb-4">
+            O mercado está atualmente:{" "}
+            <span className="font-bold">{mercadoStatus.toUpperCase()}</span>
+          </p>
+          <button
+            onClick={handleToggleMercado}
+            className={`py-2 px-6 rounded-lg text-white font-bold ${
+              mercadoStatus === "aberto"
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
+          >
+            {mercadoStatus === "aberto"
+              ? "1. FECHAR MERCADO"
+              : "2. APURAR PONTOS E ABRIR MERCADO"}
+          </button>
+        </div>
 
-      <h2 className="text-3xl font-bold mb-4">Pontuação das Jogadoras</h2>
-      <div className="space-y-6">
-        {jogadoras.map((jogadora) => (
-          <div key={jogadora.id} className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src={`https://backendpassapraela-producao.onrender.com${jogadora.url_imagem}`}
-                  alt={jogadora.nome}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                <div>
-                  <h2 className="text-2xl font-bold">{jogadora.nome}</h2>
-                  <p className="text-gray-600">{jogadora.posicao}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-lg">Pontuação na Rodada</p>
-                <p className="text-3xl font-bold text-purple-600">
-                  {(jogadora.pontuacao || 0).toFixed(2)}
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              {statFields.map((field) => (
-                <div key={field.name}>
-                  <label className="block text-sm font-medium text-gray-700">
-                    {field.label}
-                  </label>
-                  <input
-                    type="number"
-                    value={jogadora[field.name] || 0}
-                    onChange={(e) =>
-                      handleStatChange(jogadora.id, field.name, e.target.value)
-                    }
-                    className="mt-1 w-full p-2 border rounded-md"
-                  />
-                </div>
-              ))}
-            </div>
-            {/* O botão de salvar pontuação agora é desabilitado se o mercado estiver aberto */}
-            <button
-              onClick={() => handleSaveStats(jogadora.id)}
-              disabled={mercadoStatus === "aberto"}
-              className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        <h2 className="text-3xl font-bold mb-4">Pontuação das Jogadoras</h2>
+        <div className="space-y-6">
+          {jogadoras.map((jogadora) => (
+            <div
+              key={jogadora.id}
+              className="bg-white p-6 rounded-lg shadow-md"
             >
-              Salvar Pontuação
-            </button>
-            {mercadoStatus === "aberto" && (
-              <p className="text-sm text-gray-500 mt-2">
-                Você só pode salvar a pontuação com o mercado fechado.
-              </p>
-            )}
-          </div>
-        ))}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={`http://localhost:3001${jogadora.url_imagem}`}
+                    alt={jogadora.nome}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h2 className="text-2xl font-bold">{jogadora.nome}</h2>
+                    <p className="text-gray-600">{jogadora.posicao}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg">Pontuação na Rodada</p>
+                  <p className="text-3xl font-bold text-purple-600">
+                    {(jogadora.pontuacao || 0).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                {statFields.map((field) => (
+                  <div key={field.name}>
+                    <label className="block text-sm font-medium text-gray-700">
+                      {field.label}
+                    </label>
+                    <input
+                      type="number"
+                      value={jogadora[field.name] || 0}
+                      onChange={(e) =>
+                        handleStatChange(
+                          jogadora.id,
+                          field.name,
+                          e.target.value
+                        )
+                      }
+                      className="mt-1 w-full p-2 border rounded-md"
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* O botão de salvar pontuação agora é desabilitado se o mercado estiver aberto */}
+              <button
+                onClick={() => handleSaveStats(jogadora.id)}
+                disabled={mercadoStatus === "aberto"}
+                className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                Salvar Pontuação
+              </button>
+              {mercadoStatus === "aberto" && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Você só pode salvar a pontuação com o mercado fechado.
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

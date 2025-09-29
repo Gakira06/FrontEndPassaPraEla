@@ -8,14 +8,15 @@ import Swal from "sweetalert2";
 
 function TeamsPage() {
   const navigate = useNavigate();
-  const { team, teamName, clearTeam } = useTeam();
+  // Pegamos a nova função 'saveTeam' do contexto
+  const { team, teamName, clearTeam, saveTeam } = useTeam();
   const [mercadoAberto, setMercadoAberto] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMercadoStatus = async () => {
       try {
-        const response = await fetch("https://backendpassapraela-producao.onrender.com/mercado/status");
+        const response = await fetch("http://localhost:3001/mercado/status");
         const data = await response.json();
         const isMarketOpen = data.status === "aberto";
 
@@ -58,6 +59,47 @@ function TeamsPage() {
     }
   };
 
+  // NOVA FUNÇÃO: Lida com o clique no botão de salvar
+  const handleSaveRoster = async () => {
+    const result = await Swal.fire({
+      title: "Confirmar Escalação",
+      text: "Tem certeza que deseja salvar esta escalação?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#10B981", // Verde
+      cancelButtonColor: "#EF4444", // Vermelho
+      confirmButtonText: "Sim, salvar!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Salvando...",
+        text: "Aguarde enquanto sua escalação é enviada.",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      try {
+        await saveTeam(); // Chama a função do contexto
+        Swal.close();
+        Swal.fire({
+          icon: "success",
+          title: "Escalação Salva!",
+          text: "Sua equipe foi salva com sucesso no banco de dados.",
+          timer: 2500,
+          showConfirmButton: false,
+        });
+      } catch (error) {
+        Swal.close();
+        // O erro já é tratado no contexto, mas podemos ter um fallback
+        console.error("Falha ao salvar a escalação:", error);
+      }
+    }
+  };
+
   if (loading) {
     return <div className="text-center p-8">Carregando...</div>;
   }
@@ -67,9 +109,7 @@ function TeamsPage() {
       <HeaderUniversal />
       <div className="min-h-screen bg-gray-900 font-sans">
         <main className="max-w-full mx-auto p-8 bg-white">
-          <h2 className="text-4xl font-bold text-purple-600 mb-2">
-            {teamName}
-          </h2>
+          <h2 className="text-4xl font-bold text-purple-600 mb-2">{teamName}</h2>
           <h3 className="text-2xl font-semibold text-gray-500 mb-6">
             Sua Escalação
           </h3>
@@ -108,7 +148,7 @@ function TeamsPage() {
                     {jogadora ? (
                       <>
                         <img
-                          src={"https://backendpassapraela-producao.onrender.com" + jogadora.url_imagem}
+                          src={"http://localhost:3001" + jogadora.url_imagem}
                           alt={jogadora.nome}
                           className="rounded-full h-16 w-16 object-cover border-2"
                         />
@@ -142,7 +182,7 @@ function TeamsPage() {
                       {team[pos.key]?.nome || "Vazio"}
                     </span>
                     <span className="font-bold text-green-400">
-                      {team[pos.key]?.pontuacao.toFixed(2) || "0.00"}
+                      {(team[pos.key]?.pontuacao || 0).toFixed(2)}
                     </span>
                   </li>
                 ))}
@@ -160,6 +200,16 @@ function TeamsPage() {
                   </span>
                 </div>
               </div>
+
+              {/* BOTÃO DE SALVAR ADICIONADO AQUI */}
+              <button
+                onClick={handleSaveRoster}
+                disabled={!mercadoAberto}
+                className="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg text-lg hover:bg-green-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {mercadoAberto ? 'Salvar Escalação' : 'Mercado Fechado'}
+              </button>
+              
             </div>
           </div>
         </main>

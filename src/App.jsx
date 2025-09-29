@@ -16,7 +16,6 @@ import RankingPage from "./pages/RankingPage";
 import Sobre from "./pages/Sobre";
 import MathStatsPage from "./pages/MathStatsPage";
 
-
 function App() {
   return (
     <Router>

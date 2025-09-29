@@ -10,7 +10,7 @@ export default function RankingPage() {
     useEffect(() => {
         const fetchRanking = async () => {
             try {
-                const response = await fetch("https://backendpassapraela-producao.onrender.com/ranking");
+                const response = await fetch("http://localhost:3001/ranking");
                 if (!response.ok) {
                     throw new Error("Não foi possível carregar o ranking.");
                 }
