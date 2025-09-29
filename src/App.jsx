@@ -14,7 +14,8 @@ import AdminDashboard from "./pages/AdiminDashboard";
 import Planos from "./pages/Planos";
 import RankingPage from "./pages/RankingPage";
 import Sobre from "./pages/Sobre";
-import PlayerStatsPage from "./pages/PlayerStatsPage";
+import MathStatsPage from "./pages/MathStatsPage";
+
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
             <Route path="/team" element={<TeamsPage />} />
             <Route path="/market" element={<MarketPage />} />
             <Route path="/ranking" element={<RankingPage />} />
-            <Route path="/jogadora/:id/stats" element={<PlayerStatsPage />} />
+            <Route path="/math-analytics" element={<MathStatsPage />} /> 
           </Routes>
         </TeamProvider>
       </CartProvider>
