@@ -5,47 +5,39 @@ import HeaderUniversal from "../components/layout/HeaderUniversal";
 import Footer from "../components/layout/Footer";
 import { Link } from "react-router-dom";
 
-// A lógica dos cards de análise matemática não precisa de alterações.
+// ... (O seu objeto ANALISE_MATEMATICA e o componente MathCard permanecem aqui, sem alterações)
 const ANALISE_MATEMATICA = {
   exponencial: {
-    titulo: "1. Modelo Exponencial: O 'boom' inicial de seguidores",
+    titulo: "1. Modelo Exponencial: Crescimento de Seguidores",
     formula: "S(t) = 5000 * (1 + 0.05)ᵗ",
     descricao:
-      "Este modelo simula o crescimento rápido e acelerado de seguidores no início da carreira ou após um lance de grande viralização. O crescimento é proporcional ao número atual de seguidores.",
+      "Este modelo simula o crescimento rápido e acelerado de seguidores no início da carreira. O crescimento é proporcional ao número atual de seguidores.",
     resultadoSimulado:
-      "Com 5.000 seguidores iniciais e taxa de 5% ao mês, a projeção é de 9.000 seguidores em 1 ano e 27.000 em 3 anos.",
+      "Com 5.000 seguidores iniciais e taxa de 5% ao mês, a projeção é de 9.000 em 1 ano e 27.000 em 3 anos.",
   },
   logistico: {
-    titulo: "2. Modelo Logístico: Quando o crescimento tem um limite",
+    titulo: "2. Modelo Logístico: Saturação de Viralização",
     formula: "L(t) = 25000 / (1 + e⁻⁰·³⁽ᵗ⁻¹²⁾)",
     descricao:
-      "Este modelo representa a viralização de um post. O crescimento é rápido inicialmente, mas desacelera e estabiliza ao atingir um limite máximo de saturação (L=25.000), formando a curva em 'S'.",
+      "Este modelo representa a viralização de um post. O crescimento é rápido inicialmente, mas desacelera e estabiliza ao atingir um limite máximo (L=25.000), formando a curva em 'S'.",
     resultadoSimulado:
-      "O post alcança um limite de saturação de 25.000 curtidas após o pico de viralização.",
+      "O post alcança um limite de 25.000 curtidas após o pico de viralização.",
   },
-  derivada: (aceleracao) => ({
-    titulo: "3. Derivadas: A Explosão de uma Arrancada (Velocidade)",
-    formula: `Velocidade: v(t) = ${aceleracao.toFixed(
-      1
-    )}t + 2. Posição: s(t) = ${(aceleracao / 2).toFixed(1)}t² + 2t.`,
-    descricao: `A derivada da posição (s(t)) é a velocidade (v(t)). O backend está a simular uma Aceleração Constante de ${aceleracao.toFixed(
-      1
-    )} m/s² que é a base para o modelo de esforço físico.`,
+  derivada: {
+    titulo: "3. Derivadas: A Explosão de uma Arrancada",
+    formula: "Velocidade: v(t) = 6.0t + 2. Posição: s(t) = 3.0t² + 2t.",
+    descricao:
+      "A derivada da posição (s(t)) é a velocidade (v(t)). O backend está a simular uma Aceleração Constante de 6.0 m/s² que é a base para o modelo de esforço físico.",
+  },
+  integral: (distanciaKm) => ({
+    titulo: "4. Integrais: Calculando a Distância Total",
+    formula: `Distância = ∫ v(t) dt.`,
+    descricao:
+      "A Integral da função Velocidade (área abaixo do gráfico) nos dá a Distância Total percorrida (s(t)). O valor no painel de métricas acima representa o esforço total da jogadora.",
+    resultadoSimulado: `A distância real percorrida no jogo (via sensor IoT) foi de ${(
+      distanciaKm * 1000
+    ).toFixed(0)} metros (${distanciaKm.toFixed(2)} km).`,
   }),
-  integral: (distanciaKm) => {
-    const distanciaMetros = (distanciaKm * 1000).toFixed(0);
-    const resultadoSimulado =
-      distanciaKm > 0
-        ? `A distância real percorrida no jogo (via sensor IoT) foi de ${distanciaMetros} metros (${distanciaKm} km). Na modelagem matemática, esta distância é a Área sob a Curva da Velocidade (integral).`
-        : `O painel de gráficos abaixo mostra como a distância (Integral) é calculada com base na aceleração (Derivada).`;
-    return {
-      titulo: "4. Integrais: Calculando a Distância Total do Esforço",
-      formula: `Distância = ∫ v(t) dt.`,
-      descricao:
-        "A Integral da função Velocidade (área abaixo do gráfico v(t)) nos dá a Distância Total percorrida (s(t)). O valor no painel de métricas acima representa o esforço total da jogadora na partida.",
-      resultadoSimulado: resultadoSimulado,
-    };
-  },
 };
 
 const MathCard = ({ titulo, formula, descricao, resultadoSimulado }) => (
@@ -55,7 +47,7 @@ const MathCard = ({ titulo, formula, descricao, resultadoSimulado }) => (
     <p className="text-gray-600 mb-3">{descricao}</p>
     {resultadoSimulado && (
       <p className="bg-gray-100 p-3 rounded-md text-sm italic text-gray-700">
-        <span className="font-semibold">Simulação/IoT:</span>
+        <span className="font-semibold">Simulação/IoT:</span>{" "}
         {resultadoSimulado}
       </p>
     )}
@@ -63,12 +55,15 @@ const MathCard = ({ titulo, formula, descricao, resultadoSimulado }) => (
 );
 
 export default function MathStatsPage() {
-  const [playerStats, setPlayerStats] = useState(null);
+  const [playerStats, setPlayerStats] = useState({
+    distancia_km: 0,
+    passos_total: 0,
+  });
   const [loading, setLoading] = useState(true);
+  const [graphKey, setGraphKey] = useState(Date.now()); // Chave para forçar a atualização da imagem
 
   const playerId = 1;
 
-  // Efeito para buscar os dados do sensor IoT (passos, distância)
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -79,32 +74,26 @@ export default function MathStatsPage() {
           throw new Error("Falha ao buscar estatísticas do sensor.");
         const data = await response.json();
         setPlayerStats(data);
+        // Atualiza a chave do gráfico sempre que os dados são atualizados com sucesso
+        setGraphKey(Date.now());
       } catch (err) {
         console.error("Erro no fetch de stats:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchStats();
+
+    // Busca os dados a cada 3 segundos
+    const intervalId = setInterval(fetchStats, 3000);
+    return () => clearInterval(intervalId); // Limpa o intervalo ao sair da página
   }, [playerId]);
 
-  // Os valores para os cards são calculados a partir dos dados do sensor
-  const accelerationValue = 6.0; // Valor fixo da simulação
-  const distanceKm = playerStats?.distancia_km || 0.0;
-  const stepsTotal = playerStats?.passos_total || 0;
+  // O URL do gráfico agora inclui a chave para evitar problemas de cache do browser
+  const graphImageUrl = `https://backendpassapraela-producao.onrender.com/math-stats-image?key=${graphKey}`;
 
-  // O URL do gráfico agora é direto e não precisa de um useEffect separado
-  const graphImageUrl =
-    "https://backendpassapraela-producao.onrender.com/math-stats-image";
-
-  // Cálculos para os cards dinâmicos
-  const derivativeCardProps = useMemo(
-    () => ANALISE_MATEMATICA.derivada(accelerationValue),
-    [accelerationValue]
-  );
   const integralCardProps = useMemo(
-    () => ANALISE_MATEMATICA.integral(distanceKm),
-    [distanceKm]
+    () => ANALISE_MATEMATICA.integral(playerStats.distancia_km),
+    [playerStats.distancia_km]
   );
 
   return (
@@ -116,30 +105,30 @@ export default function MathStatsPage() {
             Análise Matemática e IoT
           </h1>
           <h2 className="text-2xl text-purple-600 mb-12 text-center">
-            Conectando o Desempenho da Jogadora (ID {playerId}) com a Modelagem
+            Desempenho da Jogadora (ID {playerId})
           </h2>
 
           <div className="bg-purple-100 p-6 rounded-xl shadow-inner mb-12">
             <h3 className="text-2xl font-bold text-purple-800 mb-4">
-              Métricas do Sensor (IoT - Dinâmicas)
+              Métricas do Sensor (Atualizadas em Tempo Real)
             </h3>
             {loading ? (
               <div className="text-center text-gray-600">
-                Carregando dados do sensor...
+                A aguardar dados do sensor...
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div>
-                  <p className="text-3xl font-extrabold text-purple-600">
-                    {stepsTotal}
+                  <p className="text-4xl font-extrabold text-purple-600">
+                    {playerStats.passos_total}
                   </p>
                   <p className="text-gray-600">Total de Passos</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-extrabold text-purple-600">
-                    {distanceKm.toFixed(2)} km
+                  <p className="text-4xl font-extrabold text-purple-600">
+                    {playerStats.distancia_km.toFixed(2)} km
                   </p>
-                  <p className="text-gray-600">Distância Total (Jogo)</p>
+                  <p className="text-gray-600">Distância Total</p>
                 </div>
               </div>
             )}
@@ -147,32 +136,31 @@ export default function MathStatsPage() {
 
           <div className="mb-12">
             <h3 className="text-3xl font-bold text-gray-800 text-center mb-6">
-              Painel de Análise (Gráfico Gerado em Tempo Real)
+              Gráfico de Desempenho (Dinâmico)
             </h3>
-            <img
-              src={graphImageUrl}
-              alt="Gráfico de Análise de Desempenho"
-              className="w-full h-auto bg-white rounded-lg shadow-xl p-4 border"
-            />
+            <div className="bg-white rounded-lg shadow-xl p-4 border flex justify-center items-center">
+              <img
+                key={graphKey}
+                src={graphImageUrl}
+                alt="Gráfico de Análise de Desempenho"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
 
-          <div className="space-y-8">
-            <h3 className="text-3xl font-bold text-gray-800 text-center border-b pb-4">
-              A Lógica por Trás da Simulação
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <MathCard {...derivativeCardProps} />
-              <MathCard {...integralCardProps} />
-              <MathCard {...ANALISE_MATEMATICA.exponencial} />
-              <MathCard {...ANALISE_MATEMATICA.logistico} />
-            </div>
-            <div className="pt-8 text-center">
-              <Link to="/" className="inline-block">
-                <button className="bg-gray-800 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-gray-700 transition-colors shadow-lg">
-                  Voltar para a Home
-                </button>
-              </Link>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <MathCard {...ANALISE_MATEMATICA.derivada} />
+            <MathCard {...integralCardProps} />
+            <MathCard {...ANALISE_MATEMATICA.exponencial} />
+            <MathCard {...ANALISE_MATEMATICA.logistico} />
+          </div>
+
+          <div className="pt-12 text-center">
+            <Link to="/" className="inline-block">
+              <button className="bg-gray-800 text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-gray-700 transition-colors shadow-lg">
+                Voltar para a Home
+              </button>
+            </Link>
           </div>
         </div>
       </div>
