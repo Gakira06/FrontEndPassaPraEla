@@ -34,7 +34,7 @@ export default function PlayerStatsPage() {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/jogadoras/${id}/stats-fisicas`
+          `https://backendpassapraela-producao.onrender.com/jogadoras/${id}/stats-fisicas`
         );
 
         if (!response.ok) {

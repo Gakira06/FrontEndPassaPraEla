@@ -45,7 +45,7 @@ export default function FormRegistro({ children, adress }) {
     });
 
     try {
-      const response = await fetch("http://localhost:3001/cadastrar", {
+      const response = await fetch("https://backendpassapraela-producao.onrender.com/cadastrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

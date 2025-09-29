@@ -24,7 +24,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const jogadorasResponse = await fetch(
-          "http://localhost:3001/jogadoras"
+          "https://backendpassapraela-producao.onrender.com/jogadoras"
         );
         if (!jogadorasResponse.ok)
           throw new Error("Falha ao buscar jogadoras.");
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
         setJogadoras(jogadorasData);
 
         const mercadoResponse = await fetch(
-          "http://localhost:3001/mercado/status"
+          "https://backendpassapraela-producao.onrender.com/mercado/status"
         );
         if (!mercadoResponse.ok)
           throw new Error("Falha ao buscar status do mercado.");
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/jogadoras/${jogadoraId}/stats`,
+        `https://backendpassapraela-producao.onrender.com/jogadoras/${jogadoraId}/stats`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
 
       try {
         // Envia a requisição para o backend com o novo status desejado
-        const response = await fetch("http://localhost:3001/mercado/status", {
+        const response = await fetch("https://backendpassapraela-producao.onrender.com/mercado/status", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: novoStatus }),
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-4">
                 <img
-                  src={`http://localhost:3001${jogadora.url_imagem}`}
+                  src={`https://backendpassapraela-producao.onrender.com${jogadora.url_imagem}`}
                   alt={jogadora.nome}
                   className="w-16 h-16 rounded-full object-cover"
                 />

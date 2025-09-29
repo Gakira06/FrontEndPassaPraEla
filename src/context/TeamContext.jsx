@@ -21,7 +21,7 @@ export const TeamProvider = ({ children }) => {
     if (!userEmail) return;
 
     try {
-      await fetch("http://localhost:3001/escalacao", {
+      await fetch("https://backendpassapraela-producao.onrender.com/escalacao", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail, team: currentTeam }),
