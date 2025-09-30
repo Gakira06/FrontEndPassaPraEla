@@ -106,7 +106,7 @@ export default function MathStatsPage() {
       try {
         // FAZ A REQUISIÇÃO PARA O ENDPOINT NODE.JS QUE EXECUTA O PYTHON
         const response = await fetch(
-          `${import.meta.env.VITE_ANALYTICS_API_URL}/math-analytics/graph?distancia=${distanceKm}&aceleracao=${accelerationValue}`
+          `https://backendpassapraelapython.onrender.com/generate-plot?distancia=${distanceKm}&aceleracao=${accelerationValue}`
         );
         const data = await response.json();
         if (!response.ok || data.message) {
