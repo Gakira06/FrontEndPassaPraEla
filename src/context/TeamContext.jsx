@@ -31,7 +31,7 @@ export const TeamProvider = ({ children }) => {
     }
 
     try {
-      await fetch("http://localhost:3001/escalacao", {
+      await fetch(`${import.meta.env.VITE_API_URL}/escalacao`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail, team: currentTeam }),

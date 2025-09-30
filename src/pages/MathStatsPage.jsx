@@ -78,7 +78,7 @@ export default function MathStatsPage() {
     const fetchStats = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/jogadoras/${playerId}/stats-fisicas`
+          `${import.meta.env.VITE_API_URL}/jogadoras/${playerId}/stats-fisicas`
         );
         if (!response.ok) throw new Error("Falha ao buscar estatísticas.");
         const data = await response.json();
@@ -106,7 +106,7 @@ export default function MathStatsPage() {
       try {
         // FAZ A REQUISIÇÃO PARA O ENDPOINT NODE.JS QUE EXECUTA O PYTHON
         const response = await fetch(
-          `http://localhost:3001/math-analytics/graph?distancia=${distanceKm}&aceleracao=${accelerationValue}`
+          `${import.meta.env.VITE_ANALYTICS_API_URL}/math-analytics/graph?distancia=${distanceKm}&aceleracao=${accelerationValue}`
         );
         const data = await response.json();
         if (!response.ok || data.message) {

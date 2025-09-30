@@ -25,7 +25,7 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       try {
         const jogadorasResponse = await fetch(
-          "http://localhost:3001/jogadoras"
+          `${import.meta.env.VITE_API_URL}/jogadoras`
         );
         if (!jogadorasResponse.ok)
           throw new Error("Falha ao buscar jogadoras.");
