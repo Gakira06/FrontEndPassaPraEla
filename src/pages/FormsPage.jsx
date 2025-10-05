@@ -11,7 +11,7 @@ export default function FormsPage() {
         cadastrar tanto o usuário quanto as jogadoras.
         A propriedade "adress" indica para qual página navegar após o sucesso.
       */}
-      <FormularioCompleto adress="/cadastrese" />
+      <FormularioCompleto adress="/" />
 
     </Container>
   );
