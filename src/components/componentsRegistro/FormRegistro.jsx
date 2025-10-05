@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTeam } from "../../context/useTeam"; // Importa o hook do contexto
 import Swal from "sweetalert2";
 
-export default function FormRegistro({ children, adress }) {
+export default function FormRegistro({ children }) {
   const { setTeamName } = useTeam(); // Pega a função para definir o nome do time
   const [formData, setFormData] = useState({
     name: "",
@@ -29,11 +29,6 @@ export default function FormRegistro({ children, adress }) {
   // Função para lidar com o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault(); // Impede o recarregamento da página
-
-    // Salva o nome do time no contexto global
-    if (formData.nomeDaEquipe.trim()) {
-      setTeamName(formData.nomeDaEquipe);
-    }
 
     Swal.fire({
       title: "Cadastrando...",
@@ -67,7 +62,22 @@ export default function FormRegistro({ children, adress }) {
           text: data.message,
           confirmButtonColor: "#22C55E",
         });
-        navigate(adress);
+
+        // --- LÓGICA DE LOGIN APÓS CADASTRO ---
+        // 1. Cria o objeto com os dados do usuário recebidos do backend.
+        const userData = {
+          email: data.email,
+          teamName: data.teamName,
+        };
+        // 2. Salva o objeto como uma string no localStorage.
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        // 3. Atualiza o nome do time no contexto global.
+        setTeamName(data.teamName);
+
+        // 4. Redireciona para a página do time.
+        // Alterado para iniciar o fluxo de onboarding: Planos -> Regras -> Time
+        navigate("/planos");
       } else {
         Swal.close();
         Swal.fire({

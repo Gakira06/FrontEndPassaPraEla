@@ -26,7 +26,7 @@ const CardJogadora = ({ jogadora, posicao, jaSelecionada, mercadoFechado }) => {
       <div className="flex items-center space-x-4 flex-1">
         <div className="flex-shrink-0">
           <img
-            src={`${import.meta.env.VITE_API_URL}${jogadora.url_imagem}`}
+            src={`http://localhost:3001${jogadora.url_imagem}`}
             alt={`Foto de ${jogadora.nome}`}
             className="h-20 w-20 object-cover rounded-full"
           />
@@ -72,8 +72,8 @@ const PaginaSelecaoJogadoras = () => {
         try {
           // Busca jogadoras e status do mercado em paralelo
           const [jogadorasRes, mercadoRes] = await Promise.all([
-              fetch(`${import.meta.env.VITE_API_URL}/jogadoras`),
-              fetch(`${import.meta.env.VITE_API_URL}/mercado/status`)
+              fetch("http://localhost:3001/jogadoras"),
+              fetch("http://localhost:3001/mercado/status")
           ]);
 
           if (!jogadorasRes.ok) throw new Error("Não foi possível buscar os dados das jogadoras.");

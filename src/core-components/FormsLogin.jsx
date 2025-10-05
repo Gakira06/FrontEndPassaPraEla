@@ -39,7 +39,7 @@ export default function FormsLogin() {
     });
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      const response = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -55,8 +55,14 @@ export default function FormsLogin() {
           timer: 2000,
           showConfirmButton: false,
         });
-        // Salva o email do usuário no localStorage
-        localStorage.setItem("userEmail", formData.email);
+        // --- PONTO CHAVE DA SOLUÇÃO ---
+        // 1. Cria o objeto com os dados do usuário recebidos do backend.
+        const userData = {
+          email: data.email,
+          teamName: data.teamName,
+        };
+        // 2. Salva o objeto como uma string no localStorage.
+        localStorage.setItem("userData", JSON.stringify(userData));
 
         if (data.teamName) {
           setTeamName(data.teamName);

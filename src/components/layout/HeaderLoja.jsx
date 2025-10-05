@@ -9,8 +9,8 @@ export default function HeaderLoja() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/", text: "Home" },
-    { href: "/cadastrese", text: "Login" },
+    { href: "/ranking", text: "ranking" },
+    { href: "/team", text: "escalação" },
   ];
 
   return (

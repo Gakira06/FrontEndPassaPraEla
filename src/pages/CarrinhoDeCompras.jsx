@@ -34,7 +34,7 @@ export default function CarrinhoDeCompras() {
   const handleCheckout = async () => {
     setIsLoading(true); // Ativa o estado de carregamento
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/create_preference`, {
+      const response = await fetch("http://localhost:3001/create_preference", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

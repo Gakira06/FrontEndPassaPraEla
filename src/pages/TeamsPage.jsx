@@ -16,7 +16,7 @@ function TeamsPage() {
   useEffect(() => {
     const fetchMercadoStatus = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/mercado/status`);
+        const response = await fetch("http://localhost:3001/mercado/status");
         const data = await response.json();
         const isMarketOpen = data.status === "aberto";
 
@@ -148,7 +148,7 @@ function TeamsPage() {
                     {jogadora ? (
                       <>
                         <img
-                          src={`${import.meta.env.VITE_API_URL}` + jogadora.url_imagem}
+                          src={"http://localhost:3001" + jogadora.url_imagem}
                           alt={jogadora.nome}
                           className="rounded-full h-16 w-16 object-cover border-2"
                         />

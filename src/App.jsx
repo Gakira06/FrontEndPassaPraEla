@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import FormsPage from "./pages/FormsPage";
 import RegrasPage from "./pages/RegrasPage";
 import Cadastrese from "./pages/Cadastrese";
@@ -10,10 +9,9 @@ import TeamsPage from "./pages/TeamsPage";
 import MarketPage from "./pages/MarketPage";
 import { TeamProvider } from "./context/TeamContext"; // Já existente
 import { CartProvider } from "./context/CartContext"; // Nosso novo provider
-import AdminDashboard from "./pages/AdiminDashboard";
 import Planos from "./pages/Planos";
 import RankingPage from "./pages/RankingPage";
-import MathStatsPage from "./pages/MathStatsPage";
+
 
 function App() {
   return (
@@ -21,9 +19,7 @@ function App() {
       <CartProvider>
         <TeamProvider>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/cadastrese" element={<Cadastrese />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/" element={<Cadastrese />} />
             <Route path="/forms" element={<FormsPage />} />
             <Route path="/planos" element={<Planos />} />
             <Route path="/regras" element={<RegrasPage />} />
@@ -36,7 +32,6 @@ function App() {
             <Route path="/team" element={<TeamsPage />} />
             <Route path="/market" element={<MarketPage />} />
             <Route path="/ranking" element={<RankingPage />} />
-            <Route path="/math-analytics" element={<MathStatsPage />} /> 
           </Routes>
         </TeamProvider>
       </CartProvider>
