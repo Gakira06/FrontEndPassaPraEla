@@ -68,7 +68,7 @@ export default function FormsLogin() {
         if (data.teamName) {
           setTeamName(data.teamName);
         }
-        navigate(data.redirectTo || "/team");
+        navigate(data.redirectTo || "/teams");
       } else {
         Swal.close();
         Swal.fire({

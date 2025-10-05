@@ -13,7 +13,7 @@ const CardJogadora = ({ jogadora, posicao, jaSelecionada, mercadoFechado }) => {
     if (jaSelecionada || mercadoFechado) return;
     
     escalarJogadora(posicao, jogadora);
-    navigate("/team");
+    navigate("/teams");
   };
 
   const isButtonDisabled = jaSelecionada || mercadoFechado;

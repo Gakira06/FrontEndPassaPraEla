@@ -30,7 +30,7 @@ function App() {
             <Route path="/loja" element={<Loja />} />
             <Route path="/carrinhoDecompras" element={<CarrinhoDeCompras />} />
             {/* Todas as rotas abaixo têm acesso aos dados do TeamProvider */}
-            <Route path="/team" element={<TeamsPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
             <Route path="/marketplace" element={<MarketPage />} />
             <Route path="/market" element={<MarketPage />} />
             <Route path="/ranking" element={<RankingPage />} />
