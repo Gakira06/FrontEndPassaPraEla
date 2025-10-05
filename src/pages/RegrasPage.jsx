@@ -82,7 +82,7 @@ export default function RegrasPage() {
               começa agora com um mês de Alura totalmente grátis.
             </p>
             <div className="flex items-center justify-center">
-              <NavLink to="/teams">
+              <NavLink to="/team">
                 <Button>Continuar</Button>
               </NavLink>
             </div>

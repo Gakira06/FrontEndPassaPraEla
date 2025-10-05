@@ -10,7 +10,7 @@ export default function HeaderLoja() {
 
   const navLinks = [
     { href: "/ranking", text: "ranking" },
-    { href: "/teams", text: "escalação" },
+    { href: "/team", text: "escalação" },
   ];
 
   return (
