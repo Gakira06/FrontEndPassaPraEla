@@ -12,7 +12,7 @@ import { CartProvider } from "./context/CartContext"; // Nosso novo provider
 import Planos from "./pages/Planos";
 import RankingPage from "./pages/RankingPage";
 //rota redirecionada
-import AdminDashboard from "./pages/AdiminDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 
 function App() {

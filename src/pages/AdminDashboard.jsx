@@ -22,10 +22,11 @@ export default function AdminDashboard() {
 
   // Efeito que busca os dados iniciais (jogadoras e status do mercado) ao carregar a página
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const fetchData = async () => {
       try {
         const jogadorasResponse = await fetch(
-          "http://localhost:3001/jogadoras"
+          `${apiUrl}/jogadoras`
         );
         if (!jogadorasResponse.ok)
           throw new Error("Falha ao buscar jogadoras.");
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
         setJogadoras(jogadorasData);
 
         const mercadoResponse = await fetch(
-          "http://localhost:3001/mercado/status"
+          `${apiUrl}/mercado/status`
         );
         if (!mercadoResponse.ok)
           throw new Error("Falha ao buscar status do mercado.");
@@ -59,6 +60,7 @@ export default function AdminDashboard() {
 
   // Envia as estatísticas atualizadas de uma jogadora para o backend
   const handleSaveStats = async (jogadoraId) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const jogadora = jogadoras.find((j) => j.id === jogadoraId);
     if (!jogadora) return;
 
@@ -85,7 +87,7 @@ export default function AdminDashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/jogadoras/${jogadoraId}/stats`,
+        `${apiUrl}/jogadoras/${jogadoraId}/stats`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -125,6 +127,7 @@ export default function AdminDashboard() {
   // ===== LÓGICA DE CONTROLE DE MERCADO NO FRONTEND (ATUALIZADA) ======================
   // ===================================================================================
   const handleToggleMercado = async () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     // Determina qual será o próximo estado do mercado
     const novoStatus = mercadoStatus === "aberto" ? "fechado" : "aberto";
 
@@ -158,7 +161,7 @@ export default function AdminDashboard() {
 
       try {
         // Envia a requisição para o backend com o novo status desejado
-        const response = await fetch("http://localhost:3001/mercado/status", {
+        const response = await fetch(`${apiUrl}/mercado/status`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: novoStatus }),
@@ -194,8 +197,9 @@ export default function AdminDashboard() {
   if (loading) return <div className="p-8 text-center">Carregando...</div>;
   if (error)
     return <div className="p-8 text-center text-red-500">Erro: {error}</div>;
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   return (
+
     <>
     <HeaderUniversal />
       <div className="p-8 bg-gray-100 min-h-screen">
@@ -231,7 +235,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                   <img
-                    src={`http://localhost:3001${jogadora.url_imagem}`}
+                    src={`${apiUrl}${jogadora.url_imagem}`}
                     alt={jogadora.nome}
                     className="w-16 h-16 rounded-full object-cover"
                   />
