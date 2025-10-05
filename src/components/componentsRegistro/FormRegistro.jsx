@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useTeam } from "../../context/useTeam"; // Importa o hook do contexto
 import Swal from "sweetalert2";
 
+
+
 export default function FormRegistro({ children }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { setTeamName } = useTeam(); // Pega a função para definir o nome do time
   const [formData, setFormData] = useState({
     name: "",
@@ -40,7 +43,7 @@ export default function FormRegistro({ children }) {
     });
 
     try {
-      const response = await fetch("http://localhost:3001/cadastrar", {
+      const response = await fetch(`${apiUrl}/cadastrar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

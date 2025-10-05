@@ -3,6 +3,7 @@ import HeaderUniversal from "../components/layout/HeaderUniversal";
 import Footer from "../components/layout/Footer";
 
 export default function RankingPage() {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [ranking, setRanking] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +11,7 @@ export default function RankingPage() {
     useEffect(() => {
         const fetchRanking = async () => {
             try {
-                const response = await fetch("http://localhost:3001/ranking");
+                const response = await fetch(`${apiUrl}/ranking`);
                 if (!response.ok) {
                     throw new Error("Não foi possível carregar o ranking.");
                 }

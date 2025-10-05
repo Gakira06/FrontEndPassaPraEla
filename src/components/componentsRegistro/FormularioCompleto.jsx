@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import AdicionarJogadoras from "../../core-components/AdicionarJogadoras"; // Importando o componente de jogadoras
 
 export default function FormularioCompleto({ adress }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { setTeamName } = useTeam(); // Pega a função para definir o nome do time
   // Estado para os dados do usuário
@@ -38,7 +39,7 @@ export default function FormularioCompleto({ adress }) {
         setTeamName(user.nomeDaEquipe);
       }
 
-      const userResponse = await fetch("http://localhost:3001/cadastrar", {
+      const userResponse = await fetch(`${apiUrl}/cadastrar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -71,7 +72,7 @@ export default function FormularioCompleto({ adress }) {
         formData.append("imagens", jogadora.imagem); // **IMPORTANTE**: O 'name' é 'imagens'
       });
 
-      const playerResponse = await fetch("http://localhost:3001/jogadoras", {
+      const playerResponse = await fetch(`${apiUrl}/jogadoras`, {
         method: "POST",
         body: formData,
       });

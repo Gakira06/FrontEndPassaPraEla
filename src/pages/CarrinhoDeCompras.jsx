@@ -15,6 +15,7 @@ initMercadoPago("Chave", {
 });
 
 export default function CarrinhoDeCompras() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   // --- SEUS HOOKS E CÁLCULOS EXISTENTES (NENHUMA MUDANÇA AQUI) ---
   const { cartItems, addToCart, removeFromCart } = useCart();
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -34,7 +35,7 @@ export default function CarrinhoDeCompras() {
   const handleCheckout = async () => {
     setIsLoading(true); // Ativa o estado de carregamento
     try {
-      const response = await fetch("http://localhost:3001/create_preference", {
+      const response = await fetch(`${apiUrl}/create_preference`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

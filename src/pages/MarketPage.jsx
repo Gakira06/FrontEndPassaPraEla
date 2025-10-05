@@ -4,6 +4,7 @@ import { useTeam } from "../context/useTeam";
 
 // O CardJogadora agora recebe a informação se o mercado está fechado
 const CardJogadora = ({ jogadora, posicao, jaSelecionada, mercadoFechado }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const { escalarJogadora } = useTeam();
   const navigate = useNavigate();
 
@@ -26,7 +27,7 @@ const CardJogadora = ({ jogadora, posicao, jaSelecionada, mercadoFechado }) => {
       <div className="flex items-center space-x-4 flex-1">
         <div className="flex-shrink-0">
           <img
-            src={`http://localhost:3001${jogadora.url_imagem}`}
+            src={`${apiUrl}${jogadora.url_imagem}`}
             alt={`Foto de ${jogadora.nome}`}
             className="h-20 w-20 object-cover rounded-full"
           />
@@ -68,12 +69,13 @@ const PaginaSelecaoJogadoras = () => {
   const [mercadoAberto, setMercadoAberto] = useState(true);
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const fetchData = async () => {
         try {
           // Busca jogadoras e status do mercado em paralelo
           const [jogadorasRes, mercadoRes] = await Promise.all([
-              fetch("http://localhost:3001/jogadoras"),
-              fetch("http://localhost:3001/mercado/status")
+              fetch(`${apiUrl}/jogadoras`),
+              fetch(`${apiUrl}/mercado/status`)
           ]);
 
           if (!jogadorasRes.ok) throw new Error("Não foi possível buscar os dados das jogadoras.");

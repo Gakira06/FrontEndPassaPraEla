@@ -17,6 +17,7 @@ export const TeamProvider = ({ children }) => {
 
   // Efeito para carregar os dados do usuário e do time ao iniciar
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const loadInitialData = async () => {
       // 1. Carrega dados do usuário do localStorage
       const userDataString = localStorage.getItem("userData");
@@ -28,7 +29,7 @@ export const TeamProvider = ({ children }) => {
         if (userData.email) {
           try {
             const response = await fetch(
-              `http://localhost:3001/escalacao/${userData.email}`
+              `${apiUrl}/escalacao/${userData.email}`
             );
             const data = await response.json();
             if (data.success && data.escalacao) {
@@ -46,6 +47,7 @@ export const TeamProvider = ({ children }) => {
 
   // Esta função permanece a mesma, mas será chamada manualmente
   const saveTeamToBackend = async (currentTeam) => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     // Usamos o objeto completo do localStorage agora
     const userDataString = localStorage.getItem("userData");
     if (!userDataString) {
@@ -62,7 +64,7 @@ export const TeamProvider = ({ children }) => {
 
     const { email } = JSON.parse(userDataString);
     try {
-      await fetch("http://localhost:3001/escalacao", {
+      await fetch(`${apiUrl}/escalacao`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, team: currentTeam }),
